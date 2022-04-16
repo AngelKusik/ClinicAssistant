@@ -188,6 +188,26 @@ namespace ClinicAssistant
                 textBoxBody.Paste();
             }
         }
+
+        /// <summary>
+        /// Selects all text in the textbox and copies it to the clipboard.
+        /// </summary>
+        public void SelectAllClick(object sender, EventArgs e)
+        {
+            //if user selected some text.
+            if (textBoxBody.SelectionLength == 0)
+            {
+                //Selected all text in the textbox.
+                textBoxBody.SelectAll();
+                //and copy it to the clipboard
+                textBoxBody.Copy();
+            }
+            else
+            {
+                //if user selected some text, call the regular copy event handler.
+                CopyClick(sender, e);
+            }
+        }
         /// <summary>
         /// Dislays information about the application.
         /// </summary>

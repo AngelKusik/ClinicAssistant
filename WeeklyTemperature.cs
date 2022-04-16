@@ -41,9 +41,27 @@ namespace ClinicAssistant
         double totalTemperature = 0;
         double lastWeekAverage = 0;
 
+        //Declare an instance of contactTracer form to be able to use Singleton Design (mening only one 
+        //instance of this form can be open at time).
+        private static formWeeklyTemperature weeklyTemperatureInstance;
+
         #endregion
 
         #region "Event Handlers"
+        //Checks if there is an open instance of contactTracer form open and returns it or creates a new one.
+        public static formWeeklyTemperature Instance
+        {
+            get
+            {
+                //is there a contact tracer form instance open?
+                if (weeklyTemperatureInstance == null)
+                {
+                    //if no, create one
+                    weeklyTemperatureInstance = new formWeeklyTemperature();
+                }
+                return weeklyTemperatureInstance;
+            }
+        }
         /// <summary>
         /// When the form loads, assign values to the arrays based on the textboxes on the form.
         /// Note that assigning this would not work before the form was loaded, so it is done on load.
@@ -139,6 +157,17 @@ namespace ClinicAssistant
         {
             SetDefaults();
         }
+
+        /// <summary>
+        /// When this form closes destroy the open instance of weeklyTemperature.
+        /// </summary>
+        private void CloseForm(object sender, FormClosedEventArgs e)
+        {
+            weeklyTemperatureInstance = null;
+            //without this event handler the application will crash if you attempt to open a 
+            //contact tracer window again after having closed one once.
+        }
+
         #endregion
 
         #region "Functions"
@@ -247,6 +276,5 @@ namespace ClinicAssistant
         }
 
         #endregion
-
     }
 }

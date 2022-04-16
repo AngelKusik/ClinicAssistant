@@ -24,6 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace ClinicAssistant
 {
@@ -41,6 +42,9 @@ namespace ClinicAssistant
         double averageWeeklyCases = 0.0;
         int sum = 0;
 
+        //declare a global variable to hold the file path when its saved
+        string openFile = "";
+
         //Create a two dimensional array to hold the units shipped from each region.
         int[,] averageWeeklyCasesArray = new int[numberRows, numberDays];
 
@@ -50,6 +54,10 @@ namespace ClinicAssistant
 
         //Create an array to hold the average from each region
         double[] averageRegionArray = new double[numberRows];
+
+        //Declare an instance of averageWeeklyCases form to be able to use Singleton Design (mening only one 
+        //instance of this form can be open at time).
+        private static formAverageWeeklyCases averageWeeklyCasesInstance;
 
         public formAverageWeeklyCases()
         {
@@ -61,6 +69,20 @@ namespace ClinicAssistant
 
         }
         #region Functions
+        //Checks if there is an open instance of averageWeeklyCases form open and returns it or creates a new one.
+        public static formAverageWeeklyCases Instance
+        {
+            get
+            {
+                //is there a contact tracer form instance open?
+                if (averageWeeklyCasesInstance == null)
+                {
+                    //if no, create one
+                    averageWeeklyCasesInstance = new formAverageWeeklyCases();
+                }
+                return averageWeeklyCasesInstance;
+            }
+        }
         /// <summary>
         /// Given an array of controls, this function clears their text.
         /// </summary>
@@ -108,7 +130,80 @@ namespace ClinicAssistant
                 label.BackColor = Color.LightGray;
             }
         }
+        /// <summary>
+        /// Saves the contents of the form to the current file path.
+        /// </summary>
+        public void SaveArray()
+        {
+            //if the variable openFile was set is an empty string, meaning it hasn't been saved yet
+            //call "SaveListAs" instead!
+            if (openFile == String.Empty)
+            {
+                SaveArrayAs();
 
+                //Display a message informing the user that file was successfully saved.
+                MessageBox.Show("Your work is saved to " + openFile, "Save Successful");
+            }
+            //If openFile has a value, just call the Save() function!
+            else if (openFile != String.Empty)
+            {
+                Save();
+
+                //Display a message informing the user that file was successfully saved.
+                MessageBox.Show("Your work is saved to " + openFile, "Save Successful");
+            }
+        }
+
+            /// <summary>
+            /// Saves the contents of customerList to the selected file.
+            /// </summary>
+            public void SaveArrayAs()
+        {
+            //Declare, instantiate and configure a new SaveFileDialog
+            SaveFileDialog saveDialog = new SaveFileDialog();
+            saveDialog.Filter = "Text Files (*.txt)|*.txt";
+
+            //If the person picks a file and clicks "OK"
+            if (saveDialog.ShowDialog() == DialogResult.OK)
+            {
+                openFile = "List" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt";
+                //Set openFile equal to the File path 
+                openFile = saveDialog.FileName;
+                //Call the SaveFile function to write the contents of the textbox into the file.
+                Save();
+
+                //Display a message informing the user that file was successfully saved.
+                MessageBox.Show("Your work is saved to " + openFile, "Save Successful");
+            }
+            else
+            {
+                //If user clicks cancel instead of ok on the dialog, display a warning informaming file was not saved.
+                MessageBox.Show("Your work was not saved", "Warning");
+            }
+
+        }
+        /// <summary>
+        /// Saves the contents of customerList to current file location.
+        /// </summary>
+        private void Save()
+        {
+            //Create a System.IO object to make file access easier
+            FileStream fileToAcess = new FileStream(openFile, FileMode.Create, FileAccess.Write);
+            StreamWriter writer = new
+            StreamWriter(fileToAcess);
+
+            //Write the contents of the array 
+            for (int row = 0; row < numberRows; row++)
+            {
+                for (int column = 0; column < numberDays; column++)
+                {
+                    //Write the contents of the array on the file selected by the user.
+                    writer.Write(averageWeeklyCasesArray[row, column].ToString() + " - ");
+                }
+            }
+            //Close the write 
+            writer.Close();
+        }
         #endregion
         #region "Event Handlers"
 
@@ -232,6 +327,16 @@ namespace ClinicAssistant
             }
 
         }
+        /// <summary>
+        ///  When this form closes destroy the open instance of this form.
+        /// </summary>
+        private void CloseForm(object sender, FormClosedEventArgs e)
+        {
+            averageWeeklyCasesInstance = null;
+            //without this event handler the application will crash if you attempt to open a 
+            //average weekly cases window again after having closed one once.
+        }
+
         #endregion
     }
 

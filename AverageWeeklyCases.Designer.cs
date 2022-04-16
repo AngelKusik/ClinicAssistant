@@ -210,6 +210,7 @@ namespace ClinicAssistant
             this.Name = "formAverageWeeklyCases";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Average Weekly Cases";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.CloseForm);
             this.ResumeLayout(false);
             this.PerformLayout();
 

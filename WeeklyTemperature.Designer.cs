@@ -284,6 +284,7 @@ namespace ClinicAssistant
             this.Name = "formWeeklyTemperature";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Weekly Temperature";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.CloseForm);
             this.Load += new System.EventHandler(this.FormLoad);
             this.ResumeLayout(false);
             this.PerformLayout();

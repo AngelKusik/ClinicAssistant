@@ -21,6 +21,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace ClinicAssistant
 {
@@ -32,6 +33,8 @@ namespace ClinicAssistant
         // Variable representing the current selected index in the ListView.
         // This is being used to simplify a few reference to indexes.
         private int selectedIndex = -1;
+        //declare a global variable to hold the file path when its saved
+        string openFile = "";
         //Declare an instance of contactTracer form to be able to use Singleton Design (mening only one 
         //instance of this form can be open at time).
         private static formContactTracer contactTracerInstance;
@@ -161,6 +164,28 @@ namespace ClinicAssistant
             //without this event handler the application will crash if you attempt to open a 
             //contact tracer window again after having closed one once.
         }
+        /*
+        /// <summary>
+        /// Cuts a selected section of text from the textbox and pastes it to the clipboard.
+        /// </summary>
+        public void CutListView(object sender, EventArgs e)
+        {
+            //Ensure the user selected some text to cut.
+            if (selectedIndex != 0)
+            {
+                //Cut the selected text in the control and add it to the clipboard using its own method.
+                Clipboard.SetText(listViewCustomersEntered.FocusedItem.Text);
+                //listViewCustomersEntered.FocusedItem.Text = Clipboard.GetText();
+                listViewCustomersEntered.FocusedItem.Remove();
+            }
+            //If the user didn't select any text
+            else
+            {
+                //Display an error message informing that Cut failed.
+                MessageBox.Show("Please select some text to cut.", "Cut Failed");
+            }
+        }
+        */
         #endregion
         #region "Functions"
         /// <summary>
@@ -313,9 +338,83 @@ namespace ClinicAssistant
                 labelOutput.Text += "Both the email and the phone number are not valid. Please enter at least one valid contact information." + Environment.NewLine;
                 isValid &= false;
             }
-
-
             return isValid;
+        }
+        /// <summary>
+        /// Saves the contents of the form to the current file path.
+        /// </summary>
+        public void SaveList()
+        {
+            //if the variable openFile was set is an empty string, meaning it hasn't been saved yet
+            //call "SaveListAs" instead!
+            if (openFile == String.Empty)
+            {
+                SaveListAs();
+
+                //Display a message informing the user that file was successfully saved.
+                MessageBox.Show("Your work is saved to " + openFile, "Save Successful");
+            }
+            //If openFile has a value, just call the Save() function!
+            else if (openFile != String.Empty)
+            {
+                Save();
+
+                //Display a message informing the user that file was successfully saved.
+                MessageBox.Show("Your work is saved to " + openFile, "Save Successful");
+            }
+        }
+        /// <summary>
+        /// Saves the contents of customerList to the selected file.
+        /// </summary>
+        public void SaveListAs()
+        {
+            //Declare, instantiate and configure a new SaveFileDialog
+            SaveFileDialog saveDialog = new SaveFileDialog();
+            saveDialog.Filter = "Text Files (*.txt)|*.txt";
+
+            //If the person picks a file and clicks "OK"
+            if (saveDialog.ShowDialog() == DialogResult.OK)
+            {
+                openFile = "List" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt";
+                //Set openFile equal to the File path 
+                openFile = saveDialog.FileName;
+                //Call the Save function to write the contents of the textbox into the file.
+                Save();
+
+                //Display a message informing the user that file was successfully saved.
+                MessageBox.Show("Your work is saved to " + openFile, "Save Successful");
+            }
+            else
+            {
+                //If user clicks cancel instead of ok on the dialog, display a warning informaming file was not saved.
+                MessageBox.Show("Your work was not saved", "Warning");
+            }
+
+        }
+        /// <summary>
+        /// Saves the contents of customerList to current file location.
+        /// </summary>
+        /// <param name="filePath"></param>
+        private void Save()
+        {
+            //Create a System.IO object to make file access easier
+            FileStream fileToAcess = new FileStream(openFile, FileMode.Create, FileAccess.Write);
+            StreamWriter writer = new
+            StreamWriter(fileToAcess);
+
+            //write the contents of customerList on the file
+            for (int index = 0; index < customerList.Count; index++) 
+            {
+                //Write the contents of the list on the file selected by the user.
+                writer.Write(customerList[index].CustomerId + ", " +
+                    customerList[index].CustomerFirstName + ", " +
+                    customerList[index].CustomerLastName + ", " +
+                    customerList[index].CustomerEmailAddress + ", " +
+                    customerList[index].CustomerPhoneNumber + ", " +
+                    customerList[index].CustomerContactStatus + "\n");
+            }
+            //Close the write 
+            writer.Close();
         }
 
         #endregion

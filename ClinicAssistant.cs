@@ -10,9 +10,6 @@
 //
 
 
-
-//TODO: working on the save functionality. Need to figure it out how to save the contents of a list on a text file, which property I need to access to do so.
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -42,122 +39,140 @@ namespace ClinicAssistant
         private void NewTextFileClick(object sender, EventArgs e)
         {
             //creates a new MDI Child form (an instance of Alf Text Editor) using the OpenNewTextEditor() function.
-            OpenNewTextEditor();
+            NewTextEditor();
         }
         /// <summary>
         /// Opens the file dialog so the user can select a file and open its content on a new instance of Alf Text Editor.
         /// </summary>
         private void buttonOpenClick(object sender, EventArgs e)
         {
-            //Check if the active form is an Alf text editor   
-            if(this.ActiveMdiChild.GetType() == typeof(formTextEditor))
+            //if there is a Mdi child form open...
+            if (this.MdiChildren.Length > 0)
             {
-                //Force the active form to be treated as a text editor instance
-                var activeForm = (formTextEditor)this.ActiveMdiChild;
-                //call the text editor's open event handler.
-                activeForm.OpenClick(sender, e);
-            }//if the active form is a contactTracer window or AverageWeeklyeCases window, create new fileDialog and open the file in a text editor window.
-             //(these are the applications that didn't include an open functionality)
-            else if (this.ActiveMdiChild.GetType() == typeof(formContactTracer) || this.ActiveMdiChild.GetType() == typeof(formAverageWeeklyCases))
-            {
-                //Open a new file Dialog window
-                OpenFileDialog openDialog = new OpenFileDialog();
-                openDialog.Filter = "Text Files (*.txt)|*.txt|All files (*.*)|*.*";
-
-                //creates a new MDI Child form (an instance of Alf Text Editor) using the OpenNewTextEditor() function.
-                var newTextEditorWindow = OpenNewTextEditor();
-
-                //If user selects a file through the file Dialog window and click ok
-                if (openDialog.ShowDialog() == DialogResult.OK)
+                //Check if the active form is an Alf text editor   
+                if (this.ActiveMdiChild.GetType() == typeof(formTextEditor))
                 {
-                    //Declare a FileStream object to read the contents of the selected file
-                    FileStream fileToAcess = new FileStream(openDialog.FileName, FileMode.Open, FileAccess.Read);
-                    StreamReader read = new StreamReader(fileToAcess);
-
-                    //Set file path equal to the path of the file that the user is opening. openFile is a global variable that will be used by other event handlers 
-                    openFile = openDialog.FileName;
-
-                    //Read all the content of the file being opened and store it in a variable
-                    string openFileContent = read.ReadToEnd();
-
-                    //Close the reader 
-                    read.Close();
-
-                    //Display the contents of the opened file on the new instance of Alf Text Editor.
-                    newTextEditorWindow.textBoxBody.Text = openFileContent;
-                }
-
-            }//if the active form is a weekly temperature window, display an error message saying that open is not supported for this window.
-            //(I decided to not include this form type on the previous else if statement to use a broader range of options in this project).
-            else 
-            {
-                //Force the active form to be treated as a contact tracer instance
-                MessageBox.Show("The current application does not support the 'open' option", "Warning");
-
-            }
-            
-        }
-        private void buttonSaveClick(object sender, EventArgs e)
-        {
-            //Check if the active form is an Alf text editor   
-            if (this.ActiveMdiChild.GetType() == typeof(formTextEditor))
-            {
-                //Force the active form to be treated as a text editor instance
-                var activeForm = (formTextEditor)this.ActiveMdiChild;
-                //call the text editor's open event handler.
-                activeForm.SaveClick(sender, e);
-            }//if active form is a contactTracer form
-            else if (this.ActiveMdiChild.GetType() == typeof(formContactTracer)) 
-            {
-                //check if the variable  openFile was set is an empty string, meaning it hasn't been saved yet
-                if (openFile == String.Empty)
+                    //Force the active form to be treated as a text editor instance
+                    var activeForm = (formTextEditor)this.ActiveMdiChild;
+                    //call the text editor's open event handler.
+                    activeForm.OpenClick(sender, e);
+                }//if the active form is a contactTracer window, AverageWeeklyeCases window, or WeeklyTemperatureform call the general open functionality.
+                 //(these are the applications that didn't include its own open functionality)
+                else if (this.ActiveMdiChild.GetType() == typeof(formContactTracer) || this.ActiveMdiChild.GetType() == typeof(formAverageWeeklyCases) || this.ActiveMdiChild.GetType() == typeof(formWeeklyTemperature))
                 {
-                    //Declare, instantiate and configure a new SaveFileDialog
-                    SaveFileDialog saveDialog = new SaveFileDialog();
-                    saveDialog.Filter = "Text Files (*.txt)|*.txt";
-
-                    //If the person picks a file and clicks "OK"
-                    if (saveDialog.ShowDialog() == DialogResult.OK)
-                    {
-                        string filePath = "List" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt";
-                        //Set openFile equal to the File path 
-                        filePath = saveDialog.FileName;
-                        //Call the SaveFile function to write the contents of the textbox into the file.
-                        SaveList(filePath, CustomerList ???);
-
-                        //Display a message informing the user that file was successfully saved.
-                        MessageBox.Show("Your work is saved to " + filePath, "Save Successful");
-                    }
-                    else
-                    {
-                        //If user clicks cancel instead of ok on the dialog, display a warning informaming file was not saved.
-                        MessageBox.Show("Your work was not saved", "Warning");
-                    }
-                }
-                //If openFile has a value, just call the SaveFile() function!
-                else if (openFile != String.Empty)
-                {
-                    //Call the saveList()
-                    SaveList(openFile, CustomerList ???);
+                    //Call OpenFile() function
+                    OpenFile();
 
                 }
-
+            }else //if user is clicking open from parent form (no Mdi window is open), also call the general open function.
+            {
+                //call the function!
+                OpenFile();
             }
 
         }
         /// <summary>
-        /// 
+        /// Saves the contents of the active form to the current file location or call save as if there is no file location determined yet.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonSaveClick(object sender, EventArgs e)
+        {
+            //if there is a Mdi child form open...
+            if (this.MdiChildren.Length > 0)
+            {
+                //Check if the active form is an Alf text editor   
+                if (this.ActiveMdiChild.GetType() == typeof(formTextEditor))
+                {
+                    //Force the active form to be treated as a text editor instance
+                    var activeForm = (formTextEditor)this.ActiveMdiChild;
+                    //call the text editor's open event handler.
+                    activeForm.SaveClick(sender, e);
+                }//if active form is a contactTracer form
+                else if (this.ActiveMdiChild.GetType() == typeof(formContactTracer))
+                {
+                    //Force the active form to be treated as a contact tracer form
+                    var activeForm = (formContactTracer)this.ActiveMdiChild;
+                    //call the text form's open event handler.
+                    activeForm.SaveList();
+                }
+                else if (this.ActiveMdiChild.GetType() == typeof(formAverageWeeklyCases))
+                {
+                    //Force the active form to be treated as an AverageWeeklyCases form
+                    var activeForm = (formAverageWeeklyCases)this.ActiveMdiChild;
+                    //call the text form's open event handler.
+                    activeForm.SaveArray();
+                }
+                else
+                {
+                    //Display an error message
+                    MessageBox.Show("The current application does not support the 'save' option", "Save Failed");
+                }
+            }
+            else //if there is no Mdi child window open
+            {
+                //Display an error message
+                MessageBox.Show("There is no work to be saved", "Save Failed");
+            }
+        }
+        /// <summary>
+        /// Saves the contents of the active form to the selected file.
         /// </summary>
         private void buttonSaveAsClick(object sender, EventArgs e)
         {
+            //if there is a Mdi child form open...
+            if (this.MdiChildren.Length > 0)
+            {
+                //Check if the active form is an Alf text editor   
+                if (this.ActiveMdiChild.GetType() == typeof(formTextEditor))
+                {
+                    //Force the active form to be treated as a text editor instance
+                    var activeForm = (formTextEditor)this.ActiveMdiChild;
+                    //call the text editor's saveAs event handler.
+                    activeForm.SaveAsClick(sender, e);
+                }//or if active form is a contactTracer form
+                else if (this.ActiveMdiChild.GetType() == typeof(formContactTracer))
+                {
+                    //Force the active form to be treated as a contact tracer form
+                    var activeForm = (formContactTracer)this.ActiveMdiChild;
+                    //call the text form's saveAs event handler.
+                    activeForm.SaveListAs();
+                }//or if active form is a averageWeekly form
+                else if (this.ActiveMdiChild.GetType() == typeof(formAverageWeeklyCases))
+                {
+                    //Force the active form to be treated as an AverageWeeklyCases form
+                    var activeForm = (formAverageWeeklyCases)this.ActiveMdiChild;
+                    //call the text form's saveAs event handler.
+                    activeForm.SaveArrayAs();
+                }
+                else //if it's weeklyTemperature which has no save functionality coded
+                {
+                    //Display an error message
+                    MessageBox.Show("The current application does not support the 'Save As' option", "Save As Failed");
+                }
+            }
+            else //if there is no Mdi child window open
+            {
+                //Display an error message
+                MessageBox.Show("There is no work to be saved", "Save As Failed");
 
+            } 
         }
         /// <summary>
-        /// 
+        /// Closes the Mdi child form in focus, if there is no Mdi child form open closes the entire application.
         /// </summary>
         private void buttonCloseClick(object sender, EventArgs e)
         {
-
+            //if there is a Mdi child form open, close it
+            if (this.MdiChildren.Length > 0)
+            {
+                this.ActiveMdiChild.Close();
+            }
+            //otherwise close the entire application.
+            else
+            {
+                Close();
+            }
         }
         /// <summary>
         /// Closes the entire application including child windows.
@@ -171,13 +186,56 @@ namespace ClinicAssistant
         /// </summary>
         private void buttonCutClick(object sender, EventArgs e)
         {
-
+            //if there is a Mdi child form open...
+            if (this.MdiChildren.Length > 0)
+            {
+                //Check if the active form is an Alf text editor   
+                if (this.ActiveMdiChild.GetType() == typeof(formTextEditor))
+                {
+                    //Force the active form to be treated as a text editor instance
+                    var activeForm = (formTextEditor)this.ActiveMdiChild;
+                    //call the text editor's open event handler.
+                    activeForm.CutClick(sender, e); 
+                }
+                else
+                {
+                    //Display an error message
+                    MessageBox.Show("The current application does not support the 'cut' option", "Cut Failed");
+                }
+            }
+            else //if there is no Mdi child window open
+            {
+                //Display an error message
+                MessageBox.Show("There is no text to be cut", "Cut Failed");
+            }
         }
         /// <summary>
         /// 
         /// </summary>
         private void buttonCopyClick(object sender, EventArgs e)
         {
+            //if there is a Mdi child form open...
+            if (this.MdiChildren.Length > 0)
+            {
+                //Check if the active form is an Alf text editor   
+                if (this.ActiveMdiChild.GetType() == typeof(formTextEditor))
+                {
+                    //Force the active form to be treated as a text editor instance
+                    var activeForm = (formTextEditor)this.ActiveMdiChild;
+                    //call the text editor's open event handler.
+                    activeForm.CopyClick(sender, e);
+                }
+                else
+                {
+                    //Display an error message
+                    MessageBox.Show("The current application does not support the 'copy' option", "Copy Failed");
+                }
+            }
+            else //if there is no Mdi child window open
+            {
+                //Display an error message
+                MessageBox.Show("There is no text to be copied to clipboard.", "Copy Failed");
+            }
 
         }
         /// <summary>
@@ -185,13 +243,56 @@ namespace ClinicAssistant
         /// </summary>
         private void buttonPasteClick(object sender, EventArgs e)
         {
-
+            //if there is a Mdi child form open...
+            if (this.MdiChildren.Length > 0)
+            {
+                //Check if the active form is an Alf text editor   
+                if (this.ActiveMdiChild.GetType() == typeof(formTextEditor))
+                {
+                    //Force the active form to be treated as a text editor instance
+                    var activeForm = (formTextEditor)this.ActiveMdiChild;
+                    //call the text editor's open event handler.
+                    activeForm.PasteClick(sender, e);
+                }
+                else
+                {
+                    //Display an error message
+                    MessageBox.Show("The current application does not support the 'paste' option", "Paste Failed");
+                }
+            }
+            else //if there is no Mdi child window open
+            {
+                //Display an error message
+                MessageBox.Show("There is no text on clipboard to be pasted.", "Paste Failed");
+            }
         }
         /// <summary>
         /// 
         /// </summary>
         private void buttonSelectAllClick(object sender, EventArgs e)
         {
+            //if there is a Mdi child form open...
+            if (this.MdiChildren.Length > 0)
+            {
+                //Check if the active form is an Alf text editor   
+                if (this.ActiveMdiChild.GetType() == typeof(formTextEditor))
+                {
+                    //Force the active form to be treated as a text editor instance
+                    var activeForm = (formTextEditor)this.ActiveMdiChild;
+                    //call the text editor's open event handler.
+                    activeForm.SelectAllClick(sender, e);
+                }
+                else
+                {
+                    //Display an error message
+                    MessageBox.Show("The current application does not support the 'select all' option", "Select All Failed");
+                }
+            }
+            else //if there is no Mdi child window open
+            {
+                //Display an error message
+                MessageBox.Show("There is no text to be selected.", "Select All Failed");
+            }
 
         }
         /// <summary>
@@ -240,11 +341,30 @@ namespace ClinicAssistant
             
         }
         /// <summary>
-        /// 
+        /// Creates a new AverageWeeklyCases form instance if there is none open, or shows the one already open.
         /// </summary>
         private void buttonOpenAverageUnitsClick(object sender, EventArgs e)
         {
-
+            //if there is no AverageWeeklyCases form window open, make a new instance.
+            formAverageWeeklyCases newAverageWeeklyCasesForm = formAverageWeeklyCases.Instance;
+            newAverageWeeklyCasesForm.MdiParent = this;
+            //Open the new instance if it's not open already.
+            newAverageWeeklyCasesForm.Show();
+            //Puts the cursor focus on the window.
+            newAverageWeeklyCasesForm.Focus();
+        }
+        /// <summary>
+        /// Creates a new WeeklyTemperature form instance if there is none open, or shows the one already open.
+        /// </summary>
+        private void buttonOpenWeeklyTemperatureClick(object sender, EventArgs e)
+        {
+            //if there is no WeeklyTemperature form window open, make a new instance.
+            formWeeklyTemperature newWeeklyTemperatureForm = formWeeklyTemperature.Instance;
+            newWeeklyTemperatureForm.MdiParent = this;
+            //Open the new instance if it's not open already.
+            newWeeklyTemperatureForm.Show();
+            //Puts the cursor focus on the window.
+            newWeeklyTemperatureForm.Focus();
         }
 
         #endregion
@@ -252,7 +372,7 @@ namespace ClinicAssistant
         /// <summary>
         /// Opens a new instance of Alf Text Editor
         /// </summary>
-        private formTextEditor OpenNewTextEditor()
+        private formTextEditor NewTextEditor()
         {
             var editor = new formTextEditor();
             //set this form (Clinic Assistant) as the parent of the text editor instance we just created.
@@ -263,24 +383,35 @@ namespace ClinicAssistant
             return editor;
         }
 
-        #endregion
-        #region "Functions"
-        private void SaveList(string filePath, List listType)
+        private void OpenFile()
         {
-            //Create a System.IO object to make file access easier
-            FileStream fileToAcess = new FileStream(openFile, FileMode.Create, FileAccess.Write);
-            StreamWriter writer = new
-            StreamWriter(fileToAcess);
+            //Open a new file Dialog window
+            OpenFileDialog openDialog = new OpenFileDialog();
+            openDialog.Filter = "Text Files (*.txt)|*.txt|All files (*.*)|*.*";
 
-            for (int index = 0; index < customerList.Count; index++) //here instead of customer list it gotta be list type
+            //creates a new MDI Child form (an instance of Alf Text Editor) using the OpenNewTextEditor() function.
+            var newTextEditorWindow = NewTextEditor();
+
+            //If user selects a file through the file Dialog window and click ok
+            if (openDialog.ShowDialog() == DialogResult.OK)
             {
-                //Write the contents of the list on the file selected by the user.
-                writer.Write(customerList[index].ToString() + "\n");
-            }
-            //Close the write 
-            writer.Close();
-        }
+                //Declare a FileStream object to read the contents of the selected file
+                FileStream fileToAcess = new FileStream(openDialog.FileName, FileMode.Open, FileAccess.Read);
+                StreamReader read = new StreamReader(fileToAcess);
 
+                //Set file path equal to the path of the file that the user is opening. openFile is a global variable that will be used by other event handlers 
+                openFile = openDialog.FileName;
+
+                //Read all the content of the file being opened and store it in a variable
+                string openFileContent = read.ReadToEnd();
+
+                //Close the reader 
+                read.Close();
+
+                //Display the contents of the opened file on the new instance of Alf Text Editor.
+                newTextEditorWindow.textBoxBody.Text = openFileContent;
+            }
+        }
         #endregion
     }
 }
