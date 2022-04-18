@@ -1,13 +1,13 @@
 ﻿// Author:              Angelica Kusik (based on prof Kyle Chapman work)
 // Last Modified by:    Angelica Kusik
 // Original Date:       March 17, 2021
-// Last Modified Date:  April 15, 2022
+// Last Modified Date:  April 18, 2022
 // Project Name:        ContactTracer.cs
 // Course:              NETD 2202
 // Description:
 //  Lab #4 - ContactTracer.cs event handlers & functions
 //  An application created to handle the functionality of a Contact Tracer form that allows the user to enter, see, and modify customer
-//  information on a listView while keeping rack of whether the customer have been contacted or not. The application will validate the 
+//  information on a listView while keeping track of whether the customer have been contacted or not. The application will validate the 
 //  customer information according to lab 4 requirements, allow the user to select a customer from the listView and modify their information
 //  as well as enter brand new information to the list. This application was later updated to be added to the Clinic Assistant multi form project.
 
@@ -164,28 +164,58 @@ namespace ClinicAssistant
             //without this event handler the application will crash if you attempt to open a 
             //contact tracer window again after having closed one once.
         }
-        /*
+    
         /// <summary>
-        /// Cuts a selected section of text from the textbox and pastes it to the clipboard.
+        /// Cuts a selected customer from the listview and pastes it to the clipboard.
         /// </summary>
         public void CutListView(object sender, EventArgs e)
         {
-            //Ensure the user selected some text to cut.
-            if (selectedIndex != 0)
+            //Ensure the user selected a customer in the listview to cut.
+            if (selectedIndex >= 0)
             {
-                //Cut the selected text in the control and add it to the clipboard using its own method.
-                Clipboard.SetText(listViewCustomersEntered.FocusedItem.Text);
-                //listViewCustomersEntered.FocusedItem.Text = Clipboard.GetText();
-                listViewCustomersEntered.FocusedItem.Remove();
+                //Copy the selected customer in the listview to the clipboard.
+                Clipboard.SetText(customerList[selectedIndex].CustomerId.ToString() + ", " +
+                    customerList[selectedIndex].CustomerFirstName.ToString() + ", " +
+                    customerList[selectedIndex].CustomerLastName.ToString() + ", " +
+                    customerList[selectedIndex].CustomerEmailAddress.ToString() + ", " +
+                    customerList[selectedIndex].CustomerPhoneNumber.ToString() + ", Customer was contacted: " +
+                    customerList[selectedIndex].CustomerContactStatus.ToString());
+                //remove the customer from the listview.
+                customerList.RemoveAt(selectedIndex);
+                listViewCustomersEntered.Items.Remove(listViewCustomersEntered.FocusedItem);
             }
-            //If the user didn't select any text
+            //If the user didn't select any customer
             else
             {
                 //Display an error message informing that Cut failed.
-                MessageBox.Show("Please select some text to cut.", "Cut Failed");
+                MessageBox.Show("Please select a customer in the listview to cut.", "Cut Failed");
             }
         }
-        */
+
+        /// <summary>
+        /// Copies a selected customer from the listview to the clipboard.
+        /// </summary>
+        public void CopyListView(object sender, EventArgs e)
+        {
+            //Ensure the user selected a customer on the listview to copy.
+            if (selectedIndex >= 0)
+            {
+                //Copy the selected customer in the listview to the clipboard.
+                Clipboard.SetText(customerList[selectedIndex].CustomerId.ToString() + ", " +
+                    customerList[selectedIndex].CustomerFirstName.ToString() + ", " +
+                    customerList[selectedIndex].CustomerLastName.ToString() + ", " +
+                    customerList[selectedIndex].CustomerEmailAddress.ToString() + ", " +
+                    customerList[selectedIndex].CustomerPhoneNumber.ToString() + ", Customer was contacted: " +
+                    customerList[selectedIndex].CustomerContactStatus.ToString());
+            }
+            //If the user didn't select any customer
+            else
+            {
+                //Display an error message informing that Cut failed.
+                MessageBox.Show("Please select a customer in the listview to copy.", "Copy Failed");
+            }
+        }
+
         #endregion
         #region "Functions"
         /// <summary>

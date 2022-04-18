@@ -1,11 +1,11 @@
 ﻿// Author:        Angelica Kusik
-// Date:          April 14, 2022
+// Date:          April 18, 2022
 // Description:   A multi-form application that incorporates some of the applications created for the .netd course in one final project.
 //                This project is meant to provide a small company with a multi-tool application that includes a text editor, a customer tracing 
 //                feature, an average units shipped calculator, and a weekly temperature average calculator. 
 //
 //                I included the weekly temperature average calculator to this project because the way I see it, this company could maybe operate
-//                in the ice cream sales business, so temperature affects their sales, or maybe its a pharmaceutical company that wants to trace
+//                in the ice cream sales business, so temperature affects their sales, or maybe its a pharmaceutical company that wants to look at
 //                the relationship between temperature and the drugs they sold the most.
 //
 
@@ -33,12 +33,14 @@ namespace ClinicAssistant
             InitializeComponent();
         }
         #region "Event Handlers"
+
+        #region "Menu File Options"
         /// <summary>
         /// Opens a New instance of Alf Text Editor using the appropriate function.
         /// </summary>
         private void NewTextFileClick(object sender, EventArgs e)
         {
-            //creates a new MDI Child form (an instance of Alf Text Editor) using the OpenNewTextEditor() function.
+            //creates a new MDI Child form (an instance of Alf Text Editor) using the NewTextEditor() function.
             NewTextEditor();
         }
         /// <summary>
@@ -86,21 +88,21 @@ namespace ClinicAssistant
                 {
                     //Force the active form to be treated as a text editor instance
                     var activeForm = (formTextEditor)this.ActiveMdiChild;
-                    //call the text editor's open event handler.
+                    //call the text editor's save event handler.
                     activeForm.SaveClick(sender, e);
                 }//if active form is a contactTracer form
                 else if (this.ActiveMdiChild.GetType() == typeof(formContactTracer))
                 {
                     //Force the active form to be treated as a contact tracer form
                     var activeForm = (formContactTracer)this.ActiveMdiChild;
-                    //call the text form's open event handler.
+                    //call the contact tracer's save event handler.
                     activeForm.SaveList();
-                }
+                }//if active form is a averageWeekly form
                 else if (this.ActiveMdiChild.GetType() == typeof(formAverageWeeklyCases))
                 {
-                    //Force the active form to be treated as an AverageWeeklyCases form
+                    //Force the active form to be treated as an AverageWeekly form
                     var activeForm = (formAverageWeeklyCases)this.ActiveMdiChild;
-                    //call the text form's open event handler.
+                    //call the averageWeekly's save event handler.
                     activeForm.SaveArray();
                 }
                 else
@@ -135,14 +137,14 @@ namespace ClinicAssistant
                 {
                     //Force the active form to be treated as a contact tracer form
                     var activeForm = (formContactTracer)this.ActiveMdiChild;
-                    //call the text form's saveAs event handler.
+                    //call the contact tracer's saveAs event handler.
                     activeForm.SaveListAs();
                 }//or if active form is a averageWeekly form
                 else if (this.ActiveMdiChild.GetType() == typeof(formAverageWeeklyCases))
                 {
                     //Force the active form to be treated as an AverageWeeklyCases form
                     var activeForm = (formAverageWeeklyCases)this.ActiveMdiChild;
-                    //call the text form's saveAs event handler.
+                    //call the average weekly's saveAs event handler.
                     activeForm.SaveArrayAs();
                 }
                 else //if it's weeklyTemperature which has no save functionality coded
@@ -181,8 +183,10 @@ namespace ClinicAssistant
         {
             Close();
         }
+        #endregion
+        #region "Menu Edit Options"
         /// <summary>
-        /// 
+        /// Cuts selected text or selected customer from the application and copy it to the clipboard.
         /// </summary>
         private void buttonCutClick(object sender, EventArgs e)
         {
@@ -194,10 +198,18 @@ namespace ClinicAssistant
                 {
                     //Force the active form to be treated as a text editor instance
                     var activeForm = (formTextEditor)this.ActiveMdiChild;
-                    //call the text editor's open event handler.
+                    //call the text editor's cut event handler.
                     activeForm.CutClick(sender, e); 
                 }
-                else
+                //Check if the active form is a contact tracer   
+                else if (this.ActiveMdiChild.GetType() == typeof(formContactTracer))
+                {
+                    //Force the active form to be treated as a contact tracer instance
+                    var activeForm = (formContactTracer)this.ActiveMdiChild;
+                    //call the contact tracer's cut event handler.
+                    activeForm.CutListView(sender, e);
+                }
+                else //if its not a text editor or contact tracer...
                 {
                     //Display an error message
                     MessageBox.Show("The current application does not support the 'cut' option", "Cut Failed");
@@ -206,11 +218,13 @@ namespace ClinicAssistant
             else //if there is no Mdi child window open
             {
                 //Display an error message
-                MessageBox.Show("There is no text to be cut", "Cut Failed");
+                MessageBox.Show("You must open a window in order to use the 'cut' option.", "Cut Failed");
             }
         }
+
+  
         /// <summary>
-        /// 
+        /// Copies selected text or selected customer from the application to the clipboard.
         /// </summary>
         private void buttonCopyClick(object sender, EventArgs e)
         {
@@ -222,10 +236,18 @@ namespace ClinicAssistant
                 {
                     //Force the active form to be treated as a text editor instance
                     var activeForm = (formTextEditor)this.ActiveMdiChild;
-                    //call the text editor's open event handler.
+                    //call the text editor's copy event handler.
                     activeForm.CopyClick(sender, e);
                 }
-                else
+                //Check if the active form is a Contact Tracer   
+                else if (this.ActiveMdiChild.GetType() == typeof(formContactTracer))
+                {
+                    //Force the active form to be treated as a contact tracer instance
+                    var activeForm = (formContactTracer)this.ActiveMdiChild;
+                    //call the contact tracer's copy event handler.
+                    activeForm.CopyListView(sender, e);
+                }
+                else //if its not a text editor or contact tracer..
                 {
                     //Display an error message
                     MessageBox.Show("The current application does not support the 'copy' option", "Copy Failed");
@@ -234,12 +256,12 @@ namespace ClinicAssistant
             else //if there is no Mdi child window open
             {
                 //Display an error message
-                MessageBox.Show("There is no text to be copied to clipboard.", "Copy Failed");
+                MessageBox.Show("You must open a window in order to use the 'copy' option", "Copy Failed");
             }
 
         }
         /// <summary>
-        /// 
+        /// Pastes text from clipboard to the text editor.
         /// </summary>
         private void buttonPasteClick(object sender, EventArgs e)
         {
@@ -254,7 +276,7 @@ namespace ClinicAssistant
                     //call the text editor's open event handler.
                     activeForm.PasteClick(sender, e);
                 }
-                else
+                else //if its not a text editor...
                 {
                     //Display an error message
                     MessageBox.Show("The current application does not support the 'paste' option", "Paste Failed");
@@ -263,11 +285,11 @@ namespace ClinicAssistant
             else //if there is no Mdi child window open
             {
                 //Display an error message
-                MessageBox.Show("There is no text on clipboard to be pasted.", "Paste Failed");
+                MessageBox.Show("You must open a window in order to use the 'paste' option.", "Paste Failed");
             }
         }
         /// <summary>
-        /// 
+        /// Selects all text in the text editor.
         /// </summary>
         private void buttonSelectAllClick(object sender, EventArgs e)
         {
@@ -282,7 +304,7 @@ namespace ClinicAssistant
                     //call the text editor's open event handler.
                     activeForm.SelectAllClick(sender, e);
                 }
-                else
+                else //if its not a text editor...
                 {
                     //Display an error message
                     MessageBox.Show("The current application does not support the 'select all' option", "Select All Failed");
@@ -291,20 +313,24 @@ namespace ClinicAssistant
             else //if there is no Mdi child window open
             {
                 //Display an error message
-                MessageBox.Show("There is no text to be selected.", "Select All Failed");
+                MessageBox.Show("You must open a window in order to use the 'selct all; option.", "Select All Failed");
             }
 
         }
+        #endregion
+        #region "Menu Help Options"
         /// <summary>
         /// Displays the copyright information, author name, and a brief description of what this application is.
         /// </summary>
         private void buttonAboutClick(object sender, EventArgs e)
         {
             MessageBox.Show("Clinic Assistant" + Environment.NewLine +
-            "By Angelica Kusik" + Environment.NewLine +
+            "By Angelica Kusik in partnership with Alf Corporations" + Environment.NewLine +
             "A multi-form application designed to facilitate the daily operations of a small company." + Environment.NewLine +
             "\u00a9 2022 Angelica Kusik CO. All rights reserved.");
         }
+        #endregion
+        #region "Menu Window Options"
         /// <summary>
         /// Displays the open child forms in cascade style.
         /// </summary>
@@ -366,7 +392,7 @@ namespace ClinicAssistant
             //Puts the cursor focus on the window.
             newWeeklyTemperatureForm.Focus();
         }
-
+        #endregion
         #endregion
         #region "Functions"
         /// <summary>

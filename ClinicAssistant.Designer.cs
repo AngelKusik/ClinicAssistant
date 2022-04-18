@@ -51,9 +51,9 @@ namespace ClinicAssistant
             this.menuWindowTileHorizontal = new System.Windows.Forms.ToolStripMenuItem();
             this.menuWindowTileVertical = new System.Windows.Forms.ToolStripMenuItem();
             this.menuWindowOpenContactTracer = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuWindowAverageUnits = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.menuWindowAverageCases = new System.Windows.Forms.ToolStripMenuItem();
             this.menuWindowWeeklyTemperature = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.menuTop.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -130,7 +130,7 @@ namespace ClinicAssistant
             // menuFileClose
             // 
             this.menuFileClose.Name = "menuFileClose";
-            this.menuFileClose.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.menuFileClose.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
             this.menuFileClose.Size = new System.Drawing.Size(276, 40);
             this.menuFileClose.Text = "&Close";
             this.menuFileClose.ToolTipText = "Click here to close window.";
@@ -162,7 +162,7 @@ namespace ClinicAssistant
             this.menuEditCut.Image = ((System.Drawing.Image)(resources.GetObject("menuEditCut.Image")));
             this.menuEditCut.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.menuEditCut.Name = "menuEditCut";
-            this.menuEditCut.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
+            this.menuEditCut.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
             this.menuEditCut.Size = new System.Drawing.Size(289, 40);
             this.menuEditCut.Text = "Cu&t";
             this.menuEditCut.ToolTipText = "Click here to cut selected text.";
@@ -224,7 +224,7 @@ namespace ClinicAssistant
             this.menuWindowTileHorizontal,
             this.menuWindowTileVertical,
             this.menuWindowOpenContactTracer,
-            this.menuWindowAverageUnits,
+            this.menuWindowAverageCases,
             this.menuWindowWeeklyTemperature});
             this.menuWindow.Name = "menuWindow";
             this.menuWindow.Size = new System.Drawing.Size(107, 34);
@@ -234,8 +234,8 @@ namespace ClinicAssistant
             // menuWindowCascade
             // 
             this.menuWindowCascade.Name = "menuWindowCascade";
-            this.menuWindowCascade.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.menuWindowCascade.Size = new System.Drawing.Size(468, 40);
+            this.menuWindowCascade.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.C)));
+            this.menuWindowCascade.Size = new System.Drawing.Size(459, 40);
             this.menuWindowCascade.Text = "&Cascade";
             this.menuWindowCascade.ToolTipText = "Click here to display open windows in casacade.";
             this.menuWindowCascade.Click += new System.EventHandler(this.buttonCascadeClick);
@@ -243,8 +243,8 @@ namespace ClinicAssistant
             // menuWindowTileHorizontal
             // 
             this.menuWindowTileHorizontal.Name = "menuWindowTileHorizontal";
-            this.menuWindowTileHorizontal.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
-            this.menuWindowTileHorizontal.Size = new System.Drawing.Size(468, 40);
+            this.menuWindowTileHorizontal.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.H)));
+            this.menuWindowTileHorizontal.Size = new System.Drawing.Size(459, 40);
             this.menuWindowTileHorizontal.Text = "Tile &Horizontal";
             this.menuWindowTileHorizontal.ToolTipText = "Click here to display open windows in tile horizontal.";
             this.menuWindowTileHorizontal.Click += new System.EventHandler(this.buttonTileHorizontalClick);
@@ -252,8 +252,8 @@ namespace ClinicAssistant
             // menuWindowTileVertical
             // 
             this.menuWindowTileVertical.Name = "menuWindowTileVertical";
-            this.menuWindowTileVertical.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.menuWindowTileVertical.Size = new System.Drawing.Size(468, 40);
+            this.menuWindowTileVertical.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.V)));
+            this.menuWindowTileVertical.Size = new System.Drawing.Size(459, 40);
             this.menuWindowTileVertical.Text = "Tile &Vertical";
             this.menuWindowTileVertical.ToolTipText = "Click here to display open windows in tile vertical";
             this.menuWindowTileVertical.Click += new System.EventHandler(this.buttonTileVerticalClick);
@@ -261,34 +261,35 @@ namespace ClinicAssistant
             // menuWindowOpenContactTracer
             // 
             this.menuWindowOpenContactTracer.Name = "menuWindowOpenContactTracer";
-            this.menuWindowOpenContactTracer.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
-            this.menuWindowOpenContactTracer.Size = new System.Drawing.Size(468, 40);
+            this.menuWindowOpenContactTracer.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.T)));
+            this.menuWindowOpenContactTracer.Size = new System.Drawing.Size(459, 40);
             this.menuWindowOpenContactTracer.Text = "Open Contact &Tracer";
             this.menuWindowOpenContactTracer.ToolTipText = "Click here to open Contact Tracer window.";
             this.menuWindowOpenContactTracer.Click += new System.EventHandler(this.buttonOpenContactTracerClick);
             // 
-            // menuWindowAverageUnits
+            // menuWindowAverageCases
             // 
-            this.menuWindowAverageUnits.Name = "menuWindowAverageUnits";
-            this.menuWindowAverageUnits.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.U)));
-            this.menuWindowAverageUnits.Size = new System.Drawing.Size(468, 40);
-            this.menuWindowAverageUnits.Text = "Open Av&erage Weekly Cases";
-            this.menuWindowAverageUnits.ToolTipText = "Click here to open Average Units window.";
-            this.menuWindowAverageUnits.Click += new System.EventHandler(this.buttonOpenAverageUnitsClick);
+            this.menuWindowAverageCases.Name = "menuWindowAverageCases";
+            this.menuWindowAverageCases.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.E)));
+            this.menuWindowAverageCases.Size = new System.Drawing.Size(459, 40);
+            this.menuWindowAverageCases.Text = "Open Av&erage Weekly Cases";
+            this.menuWindowAverageCases.ToolTipText = "Click here to open Average Units window.";
+            this.menuWindowAverageCases.Click += new System.EventHandler(this.buttonOpenAverageUnitsClick);
             // 
             // menuWindowWeeklyTemperature
             // 
             this.menuWindowWeeklyTemperature.Name = "menuWindowWeeklyTemperature";
-            this.menuWindowWeeklyTemperature.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.T)));
-            this.menuWindowWeeklyTemperature.Size = new System.Drawing.Size(468, 40);
+            this.menuWindowWeeklyTemperature.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.P)));
+            this.menuWindowWeeklyTemperature.Size = new System.Drawing.Size(459, 40);
             this.menuWindowWeeklyTemperature.Text = "Open Weekly &Temperature";
+            this.menuWindowWeeklyTemperature.ToolTipText = "Click here to open Weekly Temperature Calculator";
             this.menuWindowWeeklyTemperature.Click += new System.EventHandler(this.buttonOpenWeeklyTemperatureClick);
             // 
             // formParent
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 30F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1168, 707);
+            this.ClientSize = new System.Drawing.Size(1168, 856);
             this.Controls.Add(this.menuTop);
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuTop;
@@ -324,7 +325,7 @@ namespace ClinicAssistant
         private System.Windows.Forms.ToolStripMenuItem menuWindowTileHorizontal;
         private System.Windows.Forms.ToolStripMenuItem menuWindowTileVertical;
         private System.Windows.Forms.ToolStripMenuItem menuWindowOpenContactTracer;
-        private System.Windows.Forms.ToolStripMenuItem menuWindowAverageUnits;
+        private System.Windows.Forms.ToolStripMenuItem menuWindowAverageCases;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.ToolStripMenuItem menuWindowWeeklyTemperature;
     }

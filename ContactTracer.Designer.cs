@@ -161,7 +161,7 @@ namespace ClinicAssistant
             this.listViewCustomersEntered.Location = new System.Drawing.Point(42, 288);
             this.listViewCustomersEntered.MultiSelect = false;
             this.listViewCustomersEntered.Name = "listViewCustomersEntered";
-            this.listViewCustomersEntered.Size = new System.Drawing.Size(1005, 333);
+            this.listViewCustomersEntered.Size = new System.Drawing.Size(1005, 254);
             this.listViewCustomersEntered.TabIndex = 9;
             this.toolTip1.SetToolTip(this.listViewCustomersEntered, "Displays the entered customers information.");
             this.listViewCustomersEntered.UseCompatibleStateImageBehavior = false;
@@ -202,15 +202,15 @@ namespace ClinicAssistant
             // labelOutput
             // 
             this.labelOutput.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.labelOutput.Location = new System.Drawing.Point(42, 638);
+            this.labelOutput.Location = new System.Drawing.Point(42, 556);
             this.labelOutput.Name = "labelOutput";
-            this.labelOutput.Size = new System.Drawing.Size(1005, 157);
+            this.labelOutput.Size = new System.Drawing.Size(1005, 113);
             this.labelOutput.TabIndex = 10;
             this.toolTip1.SetToolTip(this.labelOutput, "Displays output and error messages.");
             // 
             // buttonEnter
             // 
-            this.buttonEnter.Location = new System.Drawing.Point(759, 809);
+            this.buttonEnter.Location = new System.Drawing.Point(765, 672);
             this.buttonEnter.Name = "buttonEnter";
             this.buttonEnter.Size = new System.Drawing.Size(131, 40);
             this.buttonEnter.TabIndex = 11;
@@ -221,7 +221,7 @@ namespace ClinicAssistant
             // 
             // buttonReset
             // 
-            this.buttonReset.Location = new System.Drawing.Point(915, 809);
+            this.buttonReset.Location = new System.Drawing.Point(921, 672);
             this.buttonReset.Name = "buttonReset";
             this.buttonReset.Size = new System.Drawing.Size(131, 40);
             this.buttonReset.TabIndex = 12;
@@ -233,7 +233,7 @@ namespace ClinicAssistant
             // statusStrip1
             // 
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(28, 28);
-            this.statusStrip1.Location = new System.Drawing.Point(0, 865);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 716);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(1086, 22);
             this.statusStrip1.TabIndex = 14;
@@ -245,7 +245,7 @@ namespace ClinicAssistant
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 30F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonReset;
-            this.ClientSize = new System.Drawing.Size(1086, 887);
+            this.ClientSize = new System.Drawing.Size(1086, 738);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.buttonReset);
             this.Controls.Add(this.buttonEnter);

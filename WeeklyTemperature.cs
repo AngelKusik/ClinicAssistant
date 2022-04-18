@@ -1,9 +1,8 @@
 ﻿// Author: Angelica Kusik #100849912
-// Last Modified: February 1, 2022
 //
 // Original Author: Kyle Chapman
 // Created:  January 2022
-// Modified: 
+// Modified: April 18, 2022
 //
 // Description:
 //  A form that allows entry of 7 days of temperature values.
@@ -11,7 +10,7 @@
 //  value is compared to the average temperature value from the previous week
 //  and a message is generated based on this. Functionality to reset and exit
 //  the form is also available.
-    
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

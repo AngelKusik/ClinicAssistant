@@ -2,7 +2,7 @@
  
  Author: Angelica Kuik #100849912
  Date: February 22, 2022
- Last Modified: April 15, 2022
+ Last Modified: April 18, 2022
  Course: .NET
  Application: AverageWeeklyCases (prior UnitsShippedCalculator) - VERSION 3
  Description: AverageWeeklyCases VERSION 3 is a Windows Forms application that enables the user to
@@ -10,9 +10,8 @@
               calculates the average cases per region and the overall average cases for all three regions.
 
               AverageWeeklyCases VERSION 3 is an updated version of the UnitsShippedCalculator - VERSION 2 application created for Lab 1 that has gained
-              two more regions and incorporated the use of 2 dimensional arrays following the requirements of Lab 3, and finally adjusted to be used as the 
-              AverageWeeklyCases on the final project Clinic Assistant.
- 
+              two more regions and incorporated the use of 2 dimensional arrays following the requirements of Lab 3. Later this application was adjusted 
+              to be used on the final project Clinic Assistant. 
  */
 
 using System;
